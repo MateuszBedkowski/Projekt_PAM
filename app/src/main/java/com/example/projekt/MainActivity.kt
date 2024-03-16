@@ -10,17 +10,19 @@ import com.example.projekt.RAMFragment
 import com.example.projekt.DiskSpaceFragment
 import com.example.projekt.SystemInfoFragment
 import res.layout.*
+import com.google.*
+
 
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.fragment_system_info)
+
 
         viewPager.adapter = ViewPagerAdapter(this)
 
-        // Assuming you have defined tabLayout and viewPager in your layout XML
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "System Info"
