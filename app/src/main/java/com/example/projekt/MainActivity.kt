@@ -1,11 +1,16 @@
-package com.example.projekt
-
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.example.projekt.R
+import com.example.projekt.CPUFragment
+import com.example.projekt.RAMFragment
+import com.example.projekt.DiskSpaceFragment
+import com.example.projekt.SystemInfoFragment
+import res.layout.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewPager.adapter = ViewPagerAdapter(this)
+
+        // Assuming you have defined tabLayout and viewPager in your layout XML
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
                 0 -> tab.text = "System Info"
@@ -38,5 +45,6 @@ class MainActivity : AppCompatActivity() {
                 else -> throw IllegalArgumentException("Invalid position")
             }
         }
+
     }
 }

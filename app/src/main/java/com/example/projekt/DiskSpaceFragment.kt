@@ -1,11 +1,10 @@
-package com.example.projekt.ui
+package com.example.projekt
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.Projekt.R
 
 class DiskSpaceFragment : Fragment() {
     override fun onCreateView(
