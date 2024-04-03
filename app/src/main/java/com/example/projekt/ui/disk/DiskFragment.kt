@@ -1,4 +1,4 @@
-package com.example.projekt.ui.home
+package com.example.projekt.ui.disk
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.projekt.databinding.FragmentHomeBinding
+import com.example.projekt.databinding.FragmentDiskBinding
 
-class HomeFragment : Fragment() {
+class DiskFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentDiskBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +22,14 @@ class HomeFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-                ViewModelProvider(this).get(HomeViewModel::class.java)
+        val diskViewModel =
+                ViewModelProvider(this).get(DiskViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentDiskBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textDisk
+        diskViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

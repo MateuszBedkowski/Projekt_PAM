@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+
+    <!-- Rectangle (representing SSD) -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M8,6L16,6L16,18L8,18z" />
+
+    <!-- NVMe Indicator Ports -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M9,18L9,19L10,19L10,18z"
+        android:rotation="45"
+        android:translateX="8.5"
+        android:translateY="-2" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M11,18L11,19L12,19L12,18z"
+        android:rotation="45"
+        android:translateX="8.5"
+        android:translateY="-2" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M13,18L13,19L14,19L14,18z"
+        android:rotation="45"
+        android:translateX="8.5"
+        android:translateY="-2" />
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M15,18L15,19L16,19L16,18z"
+        android:rotation="45"
+        android:translateX="8.5"
+        android:translateY="-2" />
+</vector>

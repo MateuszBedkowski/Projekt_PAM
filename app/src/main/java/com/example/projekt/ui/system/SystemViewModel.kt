@@ -1,13 +1,13 @@
-package com.example.projekt.ui.notifications
+package com.example.projekt.ui.system
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class NotificationsViewModel : ViewModel() {
+class SystemViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is notifications Fragment"
+        value = "This is system Fragment"
     }
     val text: LiveData<String> = _text
 }
