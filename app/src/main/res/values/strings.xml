@@ -4,4 +4,7 @@
     <string name="title_cpu">CPU</string>
     <string name="title_ram">RAM</string>
     <string name="title_disk">Disk</string>
+    <string name="os">OS: </string>
+    <string name="host">Host: </string>
+    <string name="kernel">Kernel: </string>
 </resources>

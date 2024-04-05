@@ -18,12 +18,12 @@ class SystemFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
-        val systemViewModel =
-                ViewModelProvider(this).get(SystemViewModel::class.java)
+        val systemViewModel = ViewModelProvider(this).get(SystemViewModel::class.java)
+
 
         _binding = FragmentSystemBinding.inflate(inflater, container, false)
         val root: View = binding.root
