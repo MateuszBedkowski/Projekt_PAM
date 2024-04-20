@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.projekt.databinding.FragmentRamBinding
+import androidx.lifecycle.Observer
 
 class RamFragment : Fragment() {
 
@@ -18,21 +19,19 @@ class RamFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View {
-        val ramViewModel =
-                ViewModelProvider(this).get(RamViewModel::class.java)
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding = FragmentRamBinding.inflate(inflater, container, false)
+        val viewModel = ViewModelProvider(this).get(RamViewModel::class.java)
 
-        _binding = FragmentRamBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        viewModel.getRamInfo(requireContext())
 
-        val textView: TextView = binding.textRam
-        ramViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        viewModel.text.observe(viewLifecycleOwner, Observer {
+            binding.textRam.text = it
+        })
+
+        return binding.root
     }
 
     override fun onDestroyView() {

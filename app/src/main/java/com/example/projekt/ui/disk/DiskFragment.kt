@@ -29,9 +29,9 @@ class DiskFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textDisk
-        diskViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        diskViewModel.diskSpaceInfo.observe(viewLifecycleOwner, { info ->
+            textView.text = info
+        })
         return root
     }
 

@@ -10,10 +10,28 @@ import com.example.projekt.R
 class SystemViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-//        val os = R.string.os.toString()
-//        val host = R.string.host.toString()
-//        val kernel = R.string.kernel.toString()
-        value = "OS: ${System.getProperty("os.name")} ${System.getProperty("os.version")}\n" + "Host: ${Build.DEVICE}\n" + "Kernel: ${System.getProperty("os.arch")}\n"
+
+        var kernel = System.getProperty("os.name")
+        val osVersionTemp = System.getProperty("os.version")
+        val architecture = System.getProperty("os.arch")
+        val device = Build.DEVICE
+
+        var osVersion = ""
+
+        val endIndex = osVersionTemp.indexOf('-')
+        if (endIndex != -1) {
+            osVersionTemp.substring(endIndex+1, endIndex+10).capitalize().also { osVersion = it }
+        }
+
+        if (endIndex != -1) {
+            kernel = kernel + " " + osVersionTemp.substring(0, endIndex)
+        }
+
+        value = "OS: $osVersion\n" +
+                "Kernel: $kernel\n" +
+                "Host: $device\n" +
+                "Architecture: $architecture\n"
+
     }
     val text: LiveData<String> = _text
 }
