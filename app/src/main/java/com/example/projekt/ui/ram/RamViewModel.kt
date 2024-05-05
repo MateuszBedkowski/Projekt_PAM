@@ -1,49 +1,89 @@
-package com.example.projekt.ui.cpu
+package com.example.projekt.ui.ram
 
-import android.app.ActivityManager
-import android.content.Context
-import android.os.Debug
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 
 class RamViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>()
+    private val _processesInfo = MutableLiveData<List<RamProcessInfo>>()
+    val text: LiveData<String> = _text
+    val RamprocessesInfo: LiveData<List<RamProcessInfo>> = _processesInfo
 
-    fun getRamInfo(context: Context) {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val memoryInfo = ActivityManager.MemoryInfo()
-        activityManager.getMemoryInfo(memoryInfo)
-
-        val totalMemory = memoryInfo.totalMem
-        val availableMemory = memoryInfo.availMem
-        val usedMemory = totalMemory - availableMemory
-
-        val ramInfoText = "RAM: ${usedMemory / (1024 * 1024)}MB/${totalMemory / (1024 * 1024)}MB\n\n"
-        val processesText = getProcessesInfo(context)
-
-        _text.value = ramInfoText + processesText
+    init {
+        refreshRamInfo()
     }
 
-    private fun getProcessesInfo(context: Context): String {
-        val memoryInfo = Debug.MemoryInfo()
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val processes = activityManager.runningAppProcesses
 
-        processes.sortByDescending { processInfo ->
-            activityManager.getProcessMemoryInfo(intArrayOf(processInfo.pid))[0].totalPss
-        }
+    private fun refreshRamInfo() {
+        val ram = getRamInfo()
+        val processes = getTopRamProcessesInfo(10)
 
-        val processesText = StringBuilder("Top processes by RAM usage:\n\n")
-        processes.take(10).forEachIndexed { index, processInfo ->
-            val memory = activityManager.getProcessMemoryInfo(intArrayOf(processInfo.pid))[0].totalPss
-            processesText.append("${index + 1}. ${processInfo.processName}: ${memory / 1024} KB\n")
-        }
 
-        return processesText.toString()
+        _text.value = "Memory: ${ram.available} / ${ram.total}"
+
+        _processesInfo.value = processes
+
     }
 
-    val text: LiveData<String>
-        get() = _text
+    private fun getRamInfo(): RamInfo {
+        val ramInfo = RamInfo(null, null)
+        val command = "cat /proc/meminfo"
+        val process = Runtime.getRuntime().exec(command)
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+        var line: String?
+        while (reader.readLine().also { line = it } != null) {
+            when {
+                line!!.startsWith("MemTotal") -> ramInfo.total = line!!.substringAfter(":").trim()
+                line!!.startsWith("MemAvailable") -> ramInfo.available = line!!.substringAfter(":").trim()
+            }
+        }
+        reader.close()
+        return ramInfo
+    }
+
+    private fun getTopRamProcessesInfo(count: Int): List<RamProcessInfo> {
+        val processList = mutableListOf<RamProcessInfo>()
+        val command = "top -n 1 -b"
+        val process = Runtime.getRuntime().exec(command)
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+
+        var line: String?
+        var countSkipped = 0
+        while (reader.readLine().also { line = it } != null) {
+            if (line!!.startsWith("PID")) {
+                countSkipped++
+                if (countSkipped == 5) break // Skip first 5 lines including the header
+            } else {
+                val columns = line!!.trim().split("\\s+".toRegex())
+                if (columns.size >= 12) {
+                    val pid = columns[0]
+                    val ramUsage = columns[9].toDouble()
+                    val appName = columns[11]
+
+                    if (pid != null && ramUsage != null && appName != null) {
+                        processList.add(RamProcessInfo(pid, appName, ramUsage))
+                    }
+                }
+            }
+        }
+        reader.close()
+        return processList.take(count)
+    }
 }
+
+data class RamProcessInfo(
+    val pid: String,
+    val appName: String,
+    val ramUsage: Double
+)
+
+data class RamInfo(
+    var total: String?,
+    var available: String?
+)

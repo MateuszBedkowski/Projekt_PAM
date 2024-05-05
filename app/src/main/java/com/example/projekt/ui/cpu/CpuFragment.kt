@@ -1,7 +1,6 @@
 package com.example.projekt.ui.cpu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ class CpuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         cpuViewModel = ViewModelProvider(this).get(CpuViewModel::class.java)
-        Log.d("CpuFragment", "ViewModel initialized: $cpuViewModel")
 
         _binding = FragmentCpuBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -37,7 +35,7 @@ class CpuFragment : Fragment() {
         }
 
         // Set up RecyclerView for processes
-        val recyclerView: RecyclerView = binding.processesList
+        val recyclerView: RecyclerView = binding.processesListCpu
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         processesAdapter = ProcessesAdapter()
         recyclerView.adapter = processesAdapter
@@ -45,7 +43,6 @@ class CpuFragment : Fragment() {
         // Observe processes info from ViewModel
         cpuViewModel.processesInfo.observe(viewLifecycleOwner) { processes ->
             processesAdapter.submitList(processes)
-            Log.d("CpuFragment", "Processes observed: $processes")
         }
 
         return root

@@ -33,9 +33,6 @@ class CpuViewModel : ViewModel() {
 
         _processesInfo.value = processes
 
-        // Add logging statements
-        Log.d("CpuViewModel", "CPU Info: $cpu")
-        Log.d("CpuViewModel", "Top Processes: $processes")
     }
 
     private fun getCpuInfo(): CpuInfo {
@@ -55,7 +52,7 @@ class CpuViewModel : ViewModel() {
         reader.close()
         return cpuInfo
     }
-    
+
 
     private fun getTopProcessesInfo(count: Int): List<ProcessInfo> {
         val processList = mutableListOf<ProcessInfo>()
@@ -85,27 +82,7 @@ class CpuViewModel : ViewModel() {
         reader.close()
         return processList.take(count)
     }
-
-
-
-    private fun getProcessesInfo(context: Context): String {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val processes = activityManager.runningAppProcesses
-
-        processes.sortByDescending { processInfo ->
-            Process.getElapsedCpuTime()
-        }
-
-        val processesText = StringBuilder("Top processes by CPU usage:\n\n")
-        processes.take(10).forEachIndexed { index, processInfo ->
-            val cpuTime = Process.getElapsedCpuTime()
-            processesText.append("${index + 1}. ${processInfo.processName}: ${cpuTime / 1000} seconds\n")
-        }
-
-        return processesText.toString()
-    }
-
-
+    
 }
 
 data class ProcessInfo(

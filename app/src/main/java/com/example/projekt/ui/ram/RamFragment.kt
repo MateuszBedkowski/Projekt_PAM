@@ -6,40 +6,48 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.projekt.databinding.FragmentRamBinding
-import com.example.projekt.ui.cpu.RamViewModel
 
 class RamFragment : Fragment() {
 
     private var _binding: FragmentRamBinding? = null
+    private lateinit var ramViewModel: RamViewModel
+    private lateinit var processesAdapter: ProcessesAdapter
+
     private val binding get() = _binding!!
 
-    private lateinit var ramViewModel: RamViewModel
-
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentRamBinding.inflate(inflater, container, false)
-
+    ): View {
         ramViewModel = ViewModelProvider(this).get(RamViewModel::class.java)
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentRamBinding.inflate(inflater, container, false)
+        val root: View = binding.root
 
         val textView: TextView = binding.textRam
-
-        ramViewModel.text.observe(viewLifecycleOwner, Observer {
+        ramViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
-        })
+        }
 
-        ramViewModel.getRamInfo(requireContext())
+        // Set up RecyclerView for processes
+        val recyclerView: RecyclerView = binding.processesListRam
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        processesAdapter = ProcessesAdapter()
+        recyclerView.adapter = processesAdapter
+
+        // Observe processes info from ViewModel
+        ramViewModel.RamprocessesInfo.observe(viewLifecycleOwner) { processes ->
+            processesAdapter.submitList(processes)
+        }
+
+        return root
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
