@@ -40,7 +40,7 @@ class RamViewModel : ViewModel() {
         while (reader.readLine().also { line = it } != null) {
             when {
                 line!!.startsWith("MemTotal") -> ramInfo.total = line!!.substringAfter(":").trim()
-                line!!.startsWith("MemAvailable") -> ramInfo.available = line!!.substringAfter(":").trim()
+                line!!.startsWith("MemFree") -> ramInfo.available = line!!.substringAfter(":").trim()
             }
         }
         reader.close()
