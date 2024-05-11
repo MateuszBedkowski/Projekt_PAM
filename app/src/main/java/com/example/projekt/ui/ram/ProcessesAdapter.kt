@@ -13,7 +13,7 @@ import com.example.projekt.R
 class ProcessesAdapter : ListAdapter<RamProcessInfo, ProcessesAdapter.ProcessViewHolder>(ProcessDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProcessViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_process, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.ram_item_process, parent, false)
         return ProcessViewHolder(view)
     }
 

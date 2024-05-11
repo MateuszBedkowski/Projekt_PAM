@@ -18,9 +18,10 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
-        android:id="@+id/text_cpu_usage"
+        android:id="@+id/text_ram_usage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>
