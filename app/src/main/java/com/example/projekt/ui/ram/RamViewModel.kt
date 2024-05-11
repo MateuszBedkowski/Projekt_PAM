@@ -25,7 +25,7 @@ class RamViewModel : ViewModel() {
         val processes = getTopRamProcessesInfo(10)
 
 
-        _text.value = "Memory: ${ram.available} / ${ram.total}"
+        _text.value = "Memory: ${ram.used} / ${ram.total}"
 
         _processesInfo.value = processes
 
@@ -39,13 +39,20 @@ class RamViewModel : ViewModel() {
         var line: String?
         while (reader.readLine().also { line = it } != null) {
             when {
-                line!!.startsWith("MemTotal") -> ramInfo.total = line!!.substringAfter(":").trim()
-                line!!.startsWith("MemFree") -> ramInfo.available = line!!.substringAfter(":").trim()
+                line!!.startsWith("MemTotal") -> {
+                    val totalKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
+                    ramInfo.total = "${totalKb?.div(1024)?.toInt()} MB"
+                }
+                line!!.startsWith("MemFree") -> {
+                    val availableKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
+                    ramInfo.used = "${availableKb?.div(1024)?.toInt()} MB"
+                }
             }
         }
         reader.close()
         return ramInfo
     }
+
 
     private fun getTopRamProcessesInfo(count: Int): List<RamProcessInfo> {
         val processList = mutableListOf<RamProcessInfo>()
@@ -85,5 +92,5 @@ data class RamProcessInfo(
 
 data class RamInfo(
     var total: String?,
-    var available: String?
+    var used: String?
 )
