@@ -2,6 +2,7 @@ package com.example.projekt.ui.disk
 
 import android.os.Environment
 import android.os.StatFs
+import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,26 +22,51 @@ class DiskViewModel : ViewModel() {
 
     init {
         updateDiskSpaceInfo()
-        updateFileInfoList()
+        updateFileInfoList(10)
     }
 
-    private fun updateFileInfoList() {
-        val command = "du -ahR /data/data | sort -rh | head -n 10"
-        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
+//    private fun updateFileInfoList() {
+//        val command = "du -ah /Android | sort -rh | head -n 10"
+//        val process = Runtime.getRuntime().exec(command)
+//        val reader = BufferedReader(InputStreamReader(process.inputStream))
+//
+//        val fileList = mutableListOf<FileInfo>()
+//
+//        reader.useLines { lines ->
+//            lines.take(10).forEach { line ->
+//                val (sizeStr, path) = line.split("\\s+".toRegex(), 2)
+//                val size = sizeStr.substringBeforeLast('k').toIntOrNull() ?: return@forEach
+//                val fileName = path.substringAfterLast('/')
+//                fileList.add(FileInfo(fileName, path, size))
+//            }
+//        }
+//
+//        _fileInfoList.postValue(fileList)
+//        Log.d("DiskViewModel", "fileList: $fileList")
+//    }
+
+    private fun updateFileInfoList(count: Int): List<FileInfo> {
+        val fileList = mutableListOf<FileInfo>()
+        val command = "ls -l \$pwd"
+        val process = Runtime.getRuntime().exec(command)
         val reader = BufferedReader(InputStreamReader(process.inputStream))
 
-        val fileList = mutableListOf<FileInfo>()
+        var line: String?
 
-        reader.useLines { lines ->
-            lines.take(10).forEach { line ->
-                val (sizeStr, path) = line.split("\\s+".toRegex(), 2)
-                val size = sizeStr.substringBeforeLast('k').toIntOrNull() ?: return@forEach
-                val fileName = path.substringAfterLast('/')
-                fileList.add(FileInfo(fileName, path, size))
-            }
+        while (reader.readLine().also { line = it } != null) {
+            val columns = line!!.trim().split("\\s+".toRegex())
+            val size = columns[0].toInt()
+            val fullPath = columns[1]
+            val fileName = "test"
+
+            fileList.add(FileInfo(fileName, fullPath, size))
         }
 
-        _fileInfoList.postValue(fileList)
+        reader.close()
+
+        Log.d("DiskViewModel", "fileList: $fileList")
+
+        return fileList.take(count)
     }
 
 

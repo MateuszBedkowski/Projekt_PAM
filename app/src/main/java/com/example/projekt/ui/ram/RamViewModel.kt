@@ -37,21 +37,25 @@ class RamViewModel : ViewModel() {
         val process = Runtime.getRuntime().exec(command)
         val reader = BufferedReader(InputStreamReader(process.inputStream))
         var line: String?
+        var totalKb: Double? = null
+        var availableKb: Double? = null
         while (reader.readLine().also { line = it } != null) {
             when {
-                line!!.startsWith("MemTotal") -> {
-                    val totalKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
-                    ramInfo.total = "${totalKb?.div(1024)?.toInt()} MB"
-                }
-                line!!.startsWith("MemFree") -> {
-                    val availableKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
-                    ramInfo.used = "${availableKb?.div(1024)?.toInt()} MB"
-                }
+                line!!.startsWith("MemTotal") -> totalKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
+                line!!.startsWith("MemFree") -> availableKb = line!!.substringAfter(":").trim().replace(" kB", "").toDoubleOrNull()
             }
         }
         reader.close()
+        if (totalKb != null && availableKb != null) {
+            val totalMb = totalKb.div(1024)
+            val availableMb = availableKb.div(1024)
+            val usedMb = totalMb - availableMb
+            ramInfo.total = "${totalMb.toInt()} MB"
+            ramInfo.used = "${usedMb.toInt()} MB"
+        }
         return ramInfo
     }
+
 
 
     private fun getTopRamProcessesInfo(count: Int): List<RamProcessInfo> {
