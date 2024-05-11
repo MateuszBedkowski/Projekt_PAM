@@ -2,13 +2,13 @@ package com.example.projekt.ui.disk
 
 import android.os.Environment
 import android.os.StatFs
-import android.renderscript.ScriptGroup.Input
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.File
 
 data class FileInfo(val fileName: String, val fullPath: String, val size: Int)
 
@@ -25,50 +25,46 @@ class DiskViewModel : ViewModel() {
         updateFileInfoList(10)
     }
 
-//    private fun updateFileInfoList() {
-//        val command = "du -ah /Android | sort -rh | head -n 10"
-//        val process = Runtime.getRuntime().exec(command)
-//        val reader = BufferedReader(InputStreamReader(process.inputStream))
-//
-//        val fileList = mutableListOf<FileInfo>()
-//
-//        reader.useLines { lines ->
-//            lines.take(10).forEach { line ->
-//                val (sizeStr, path) = line.split("\\s+".toRegex(), 2)
-//                val size = sizeStr.substringBeforeLast('k').toIntOrNull() ?: return@forEach
-//                val fileName = path.substringAfterLast('/')
-//                fileList.add(FileInfo(fileName, path, size))
-//            }
-//        }
-//
-//        _fileInfoList.postValue(fileList)
-//        Log.d("DiskViewModel", "fileList: $fileList")
-//    }
-
     private fun updateFileInfoList(count: Int): List<FileInfo> {
         val fileList = mutableListOf<FileInfo>()
-        val command = "ls -l \$pwd"
-        val process = Runtime.getRuntime().exec(command)
-        val reader = BufferedReader(InputStreamReader(process.inputStream))
 
-        var line: String?
-
-        while (reader.readLine().also { line = it } != null) {
-            val columns = line!!.trim().split("\\s+".toRegex())
-            val size = columns[0].toInt()
-            val fullPath = columns[1]
-            val fileName = "test"
-
-            fileList.add(FileInfo(fileName, fullPath, size))
+        val rootDirectory = File("/storage/emulated/0")
+        if (rootDirectory.exists() && rootDirectory.isDirectory) {
+            val files = rootDirectory.listFiles()
+            files?.let {
+                val sortedFiles = it.sortedByDescending { file -> file.length() }
+                sortedFiles.take(10).forEach { file ->
+                    val size = file.length().toInt()
+                    val fileName = file.name
+                    val fullPath = file.path
+                    fileList.add(FileInfo(fileName, fullPath, size))
+                }
+            }
         }
 
-        reader.close()
-
+//        _fileInfoList.postValue(fileList)
         Log.d("DiskViewModel", "fileList: $fileList")
-
-        return fileList.take(count)
+        return fileList
     }
 
+    private fun getFilesInfo(directory: File): List<FileInfo> {
+        val command = "du -ah ${directory.absolutePath} | sort -rh | head -n 10"
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
+        val reader = BufferedReader(InputStreamReader(process.inputStream))
+
+        val fileList = mutableListOf<FileInfo>()
+
+        reader.useLines { lines ->
+            lines.take(10).forEach { line ->
+                val (sizeStr, path) = line.split("\\s+".toRegex(), 2)
+                val size = sizeStr.substringBeforeLast('k').toIntOrNull() ?: return@forEach
+                val fileName = path.substringAfterLast('/')
+                fileList.add(FileInfo(fileName, path, size))
+            }
+        }
+
+        return fileList
+    }
 
     private fun updateDiskSpaceInfo() {
         val stat = StatFs(Environment.getExternalStorageDirectory().path)

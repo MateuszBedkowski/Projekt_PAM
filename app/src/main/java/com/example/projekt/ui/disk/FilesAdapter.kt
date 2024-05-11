@@ -33,6 +33,8 @@ class FilesAdapter : ListAdapter<FileInfo, FilesAdapter.FileViewHolder>(FileDiff
         }
     }
 
+
+
     private class FileDiffCallback : DiffUtil.ItemCallback<FileInfo>() {
         override fun areItemsTheSame(oldItem: FileInfo, newItem: FileInfo): Boolean {
             return oldItem.fileName == newItem.fileName
