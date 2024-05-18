@@ -28,9 +28,15 @@ class ProcessesAdapter : ListAdapter<RamProcessInfo, ProcessesAdapter.ProcessVie
         private val ramUsageTextView: TextView = itemView.findViewById(R.id.text_ram_usage)
 
         fun bind(process: RamProcessInfo) {
-            appNameTextView.text = "App: ${process.appName}"
-            pidTextView.text = "PID: ${process.pid}"
-            ramUsageTextView.text = "RAM Usage: ${process.ramUsage}%"
+            val context = itemView.context
+
+            val appName = context.getString(R.string.running_app_name)
+            val pid = context.getString(R.string.pid)
+            val ramUsage = context.getString(R.string.ram_usage)
+
+            appNameTextView.text = "$appName ${process.appName}"
+            pidTextView.text = "$pid ${process.pid}"
+            ramUsageTextView.text = "$ramUsage ${process.ramUsage}%"
         }
     }
 

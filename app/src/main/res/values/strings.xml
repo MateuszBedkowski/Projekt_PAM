@@ -4,7 +4,21 @@
     <string name="title_cpu">CPU</string>
     <string name="title_ram">RAM</string>
     <string name="title_disk">Disk</string>
+    <string name="model">Model:</string>
+    <string name="cache_size">Cache Size:</string>
+    <string name="cpu_mhz">CPU MHz:</string>
+    <string name="cpu_cores">CPU Cores:</string>
     <string name="os">OS: </string>
     <string name="host">Host: </string>
     <string name="kernel">Kernel: </string>
+    <string name="architecture">Architecture: </string>
+    <string name="running_app_name">App:</string>
+    <string name="pid">PID:</string>
+    <string name="cpu_usage">CPU Usage:</string>
+    <string name="ram_usage">RAM Usage:</string>
+    <string name="file_name">File:</string>
+    <string name="path">Path:</string>
+    <string name="file_size">File Size:</string>
+    <string name="disk_space">Disk Space:</string>
+    <string name="memory">Memory:</string>
 </resources>

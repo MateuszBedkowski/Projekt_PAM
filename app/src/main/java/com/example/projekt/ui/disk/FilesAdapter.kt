@@ -12,7 +12,7 @@ import com.example.projekt.R
 class FilesAdapter : ListAdapter<FileInfo, FilesAdapter.FileViewHolder>(FileDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_process, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_file, parent, false)
         return FileViewHolder(view)
     }
 
@@ -27,9 +27,15 @@ class FilesAdapter : ListAdapter<FileInfo, FilesAdapter.FileViewHolder>(FileDiff
         private val sizeTextView: TextView = itemView.findViewById(R.id.text_size)
 
         fun bind(file: FileInfo) {
-            fileNameTextView.text = "File: ${file.fileName}"
-            fullPathTextView.text = "Path: ${file.fullPath}"
-            sizeTextView.text = "File size: ${file.size}"
+            val context = itemView.context
+
+            val fileName = context.getString(R.string.file_name)
+            val path = context.getString(R.string.path)
+            val fileSize = context.getString(R.string.file_size)
+
+            fileNameTextView.text = "$fileName ${file.fileName}"
+            fullPathTextView.text = "$path ${file.fullPath}"
+            sizeTextView.text = "$fileSize ${file.size}"
         }
     }
 

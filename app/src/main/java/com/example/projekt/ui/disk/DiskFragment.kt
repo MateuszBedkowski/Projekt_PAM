@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projekt.databinding.FragmentDiskBinding
 
-
 class DiskFragment : Fragment() {
 
     private var _binding: FragmentDiskBinding? = null
     private lateinit var diskViewModel: DiskViewModel
     private lateinit var filesAdapter: FilesAdapter
-
 
     private val binding get() = _binding!!
 
@@ -28,7 +26,7 @@ class DiskFragment : Fragment() {
         val root: View = binding.root
 
         diskViewModel = ViewModelProvider(this).get(DiskViewModel::class.java)
-
+        diskViewModel.setContext(requireContext())
 
         val diskUsageTextView = binding.textDisk
         diskViewModel.diskSpaceInfo.observe(viewLifecycleOwner) { info ->
@@ -44,7 +42,6 @@ class DiskFragment : Fragment() {
         diskViewModel.fileInfoList.observe(viewLifecycleOwner) { fileList: List<FileInfo> ->
             filesAdapter.submitList(fileList)
         }
-
 
         return root
     }

@@ -24,7 +24,10 @@ class CpuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        cpuViewModel = ViewModelProvider(this).get(CpuViewModel::class.java)
+        // Initialize the ViewModel with the factory
+        val context = requireContext() // Use requireContext() to get the context
+        val factory = CpuViewModelFactory(context)
+        cpuViewModel = ViewModelProvider(this, factory).get(CpuViewModel::class.java)
 
         _binding = FragmentCpuBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -47,7 +50,6 @@ class CpuFragment : Fragment() {
 
         return root
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

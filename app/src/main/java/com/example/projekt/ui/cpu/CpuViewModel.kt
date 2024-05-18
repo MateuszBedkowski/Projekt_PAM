@@ -1,17 +1,14 @@
 package com.example.projekt.ui.cpu
 
-import android.app.ActivityManager
 import android.content.Context
-import android.os.Debug
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.projekt.R
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import android.util.Log
-import android.os.Process
 
-class CpuViewModel : ViewModel() {
+class CpuViewModel(private val context: Context) : ViewModel() {
 
     private val _text = MutableLiveData<String>()
     private val _processesInfo = MutableLiveData<List<ProcessInfo>>()
@@ -26,13 +23,18 @@ class CpuViewModel : ViewModel() {
         val cpu = getCpuInfo()
         val processes = getTopProcessesInfo(10)
 
-        _text.value = "Model: ${cpu.model}\n" +
-                "Cache Size: ${cpu.cacheSize}\n" +
-                "CPU MHz: ${cpu.cpuMhz}\n" +
-                "CPU Cores: ${cpu.cpuCores}\n"
+        val model = context.getString(R.string.model)
+        val cacheSize = context.getString(R.string.cache_size)
+        val cpuMhz = context.getString(R.string.cpu_mhz)
+        val cpuCores = context.getString(R.string.cpu_cores)
+
+
+        _text.value = "$model ${cpu.model}\n" +
+                "$cacheSize ${cpu.cacheSize}\n" +
+                "$cpuMhz ${cpu.cpuMhz}\n" +
+                "$cpuCores ${cpu.cpuCores}\n"
 
         _processesInfo.value = processes
-
     }
 
     private fun getCpuInfo(): CpuInfo {
@@ -52,7 +54,6 @@ class CpuViewModel : ViewModel() {
         reader.close()
         return cpuInfo
     }
-
 
     private fun getTopProcessesInfo(count: Int): List<ProcessInfo> {
         val processList = mutableListOf<ProcessInfo>()
@@ -82,7 +83,6 @@ class CpuViewModel : ViewModel() {
         reader.close()
         return processList.take(count)
     }
-    
 }
 
 data class ProcessInfo(
@@ -97,5 +97,3 @@ data class CpuInfo(
     var cpuMhz: String?,
     var cpuCores: Int?
 )
-
-//Working regex. Leaving here in case of any need to use it: ^\\s+(\\d+)(.+?)(\\b\\d{1,2}\\.\\d{1,2}\\b)(.+)(\\s\\S+)$

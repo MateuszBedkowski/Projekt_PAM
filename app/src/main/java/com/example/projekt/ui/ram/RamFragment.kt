@@ -30,6 +30,10 @@ class RamFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textRam
+
+        // Call refreshRamInfo with the context
+        ramViewModel.refreshRamInfo(requireContext())
+
         ramViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }

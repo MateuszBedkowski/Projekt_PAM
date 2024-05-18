@@ -27,9 +27,15 @@ class ProcessesAdapter : ListAdapter<ProcessInfo, ProcessesAdapter.ProcessViewHo
         private val cpuUsageTextView: TextView = itemView.findViewById(R.id.text_cpu_usage)
 
         fun bind(process: ProcessInfo) {
-            appNameTextView.text = "App: ${process.appName}"
-            pidTextView.text = "PID: ${process.pid}"
-            cpuUsageTextView.text = "CPU Usage: ${process.cpuUsage}%"
+            val context = itemView.context
+
+            val runningAppName = context.getString(R.string.running_app_name)
+            val pid = context.getString(R.string.pid)
+            val cpuUsage = context.getString(R.string.cpu_usage)
+
+            appNameTextView.text = "$runningAppName ${process.appName}"
+            pidTextView.text = "$pid: ${process.pid}"
+            cpuUsageTextView.text = "$cpuUsage ${process.cpuUsage}%"
         }
     }
 

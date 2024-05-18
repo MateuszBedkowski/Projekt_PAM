@@ -12,9 +12,8 @@ import com.example.projekt.databinding.FragmentSystemBinding
 class SystemFragment : Fragment() {
 
     private var _binding: FragmentSystemBinding? = null
+    private lateinit var systemViewModel: SystemViewModel
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,8 +21,10 @@ class SystemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val systemViewModel = ViewModelProvider(this).get(SystemViewModel::class.java)
-
+        // Initialize the ViewModel with the factory
+        val context = requireContext()
+        val factory = SystemViewModelFactory(context)
+        systemViewModel = ViewModelProvider(this, factory).get(SystemViewModel::class.java)
 
         _binding = FragmentSystemBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -32,6 +33,7 @@ class SystemFragment : Fragment() {
         systemViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
         return root
     }
 

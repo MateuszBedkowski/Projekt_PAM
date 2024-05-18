@@ -1,12 +1,12 @@
 package com.example.projekt.ui.ram
 
-import android.util.Log
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.projekt.R
 import java.io.BufferedReader
 import java.io.InputStreamReader
-
 
 class RamViewModel : ViewModel() {
 
@@ -15,20 +15,14 @@ class RamViewModel : ViewModel() {
     val text: LiveData<String> = _text
     val RamprocessesInfo: LiveData<List<RamProcessInfo>> = _processesInfo
 
-    init {
-        refreshRamInfo()
-    }
-
-
-    private fun refreshRamInfo() {
+    fun refreshRamInfo(context: Context) {
         val ram = getRamInfo()
         val processes = getTopRamProcessesInfo(10)
 
+        val memoryInfo = context.getString(R.string.memory)
 
-        _text.value = "Memory: ${ram.used} / ${ram.total}"
-
+        _text.value = "$memoryInfo ${ram.used} / ${ram.total}"
         _processesInfo.value = processes
-
     }
 
     private fun getRamInfo(): RamInfo {
@@ -56,14 +50,11 @@ class RamViewModel : ViewModel() {
         return ramInfo
     }
 
-
-
     private fun getTopRamProcessesInfo(count: Int): List<RamProcessInfo> {
         val processList = mutableListOf<RamProcessInfo>()
         val command = "top -n 1 -b"
         val process = Runtime.getRuntime().exec(command)
         val reader = BufferedReader(InputStreamReader(process.inputStream))
-
         var line: String?
         var countSkipped = 0
         while (reader.readLine().also { line = it } != null) {
