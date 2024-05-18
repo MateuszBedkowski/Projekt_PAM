@@ -50,7 +50,7 @@ class DiskViewModel : ViewModel() {
             files?.let {
                 val sortedFiles = it.sortedByDescending { file -> file.length() }
                 sortedFiles.take(count).forEach { file ->
-                    val size = file.length().toInt()
+                    val size = file.length().toInt().div(1024)
                     val fileName = file.name
                     val fullPath = file.path
                     fileList.add(FileInfo(fileName, fullPath, size))

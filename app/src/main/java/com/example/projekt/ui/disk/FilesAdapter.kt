@@ -35,7 +35,7 @@ class FilesAdapter : ListAdapter<FileInfo, FilesAdapter.FileViewHolder>(FileDiff
 
             fileNameTextView.text = "$fileName ${file.fileName}"
             fullPathTextView.text = "$path ${file.fullPath}"
-            sizeTextView.text = "$fileSize ${file.size}"
+            sizeTextView.text = "$fileSize ${file.size} MB"
         }
     }
 
