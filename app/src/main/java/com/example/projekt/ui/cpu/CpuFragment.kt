@@ -24,8 +24,8 @@ class CpuFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Initialize the ViewModel with the factory
-        val context = requireContext() // Use requireContext() to get the context
+        // Initialize the ViewModel with the CpuViewModelFactory
+        val context = requireContext() // requireContext() -> to get the context
         val factory = CpuViewModelFactory(context)
         cpuViewModel = ViewModelProvider(this, factory).get(CpuViewModel::class.java)
 
@@ -43,7 +43,7 @@ class CpuFragment : Fragment() {
         processesAdapter = ProcessesAdapter()
         recyclerView.adapter = processesAdapter
 
-        // Observe processes info from ViewModel
+        // Observe processesInfo from CpuViewModel
         cpuViewModel.processesInfo.observe(viewLifecycleOwner) { processes ->
             processesAdapter.submitList(processes)
         }
@@ -51,8 +51,19 @@ class CpuFragment : Fragment() {
         return root
     }
 
+    override fun onStart() {
+        super.onStart()
+        onStartView()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+    private fun onStartView() {
+        cpuViewModel.processesInfo.observe(viewLifecycleOwner) { processes ->
+            processesAdapter.submitList(processes)
+        }
+    }
+
 }

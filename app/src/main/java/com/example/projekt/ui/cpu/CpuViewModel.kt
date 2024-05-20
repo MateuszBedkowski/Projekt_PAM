@@ -66,7 +66,7 @@ class CpuViewModel(private val context: Context) : ViewModel() {
         while (reader.readLine().also { line = it } != null) {
             if (line!!.startsWith("PID")) {
                 countSkipped++
-                if (countSkipped == 5) break // Skip first 5 lines including the header
+                if (countSkipped == 5) break // Skip first 5 lines including the header -> leave only list of processes
             } else {
                 val columns = line!!.trim().split("\\s+".toRegex())
                 if (columns.size >= 12) {

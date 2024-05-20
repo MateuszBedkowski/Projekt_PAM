@@ -37,8 +37,20 @@ class SystemFragment : Fragment() {
         return root
     }
 
+    override fun onStart() {
+        super.onStart()
+        onStartView()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onStartView() {
+        val textView: TextView = binding.textSystem
+        systemViewModel.text.observe(viewLifecycleOwner) {
+            textView.text = it
+        }
     }
 }

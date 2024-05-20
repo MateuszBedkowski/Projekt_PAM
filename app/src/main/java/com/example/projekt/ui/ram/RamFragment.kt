@@ -44,7 +44,7 @@ class RamFragment : Fragment() {
         processesAdapter = ProcessesAdapter()
         recyclerView.adapter = processesAdapter
 
-        // Observe processes info from ViewModel
+        // Observe RamprocessesInfo from RamViewModel
         ramViewModel.RamprocessesInfo.observe(viewLifecycleOwner) { processes ->
             processesAdapter.submitList(processes)
         }
@@ -52,9 +52,19 @@ class RamFragment : Fragment() {
         return root
     }
 
+    override fun onStart() {
+        super.onStart()
+        onStartView()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onStartView() {
+        ramViewModel.RamprocessesInfo.observe(viewLifecycleOwner) { processes ->
+            processesAdapter.submitList(processes)
+        }
     }
 }

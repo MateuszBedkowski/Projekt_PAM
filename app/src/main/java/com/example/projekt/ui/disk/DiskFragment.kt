@@ -39,15 +39,28 @@ class DiskFragment : Fragment() {
             adapter = filesAdapter
         }
 
+        // Observe fileInfoList from DiskViewModel
         diskViewModel.fileInfoList.observe(viewLifecycleOwner) { fileList: List<FileInfo> ->
             filesAdapter.submitList(fileList)
         }
 
         return root
     }
+    override fun onStart() {
+        super.onStart()
+        onStartView()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun onStartView() {
+        diskViewModel.fileInfoList.observe(viewLifecycleOwner) { fileList: List<FileInfo> ->
+            filesAdapter.submitList(fileList)
+        }
+    }
+
+
 }
